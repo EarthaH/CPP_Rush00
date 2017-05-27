@@ -50,6 +50,25 @@ void    game_loop(char main_char, int row, int col, int ch)
     }
 }
 
+void    printMenu(void)
+{
+    int     maxRow, maxCol, i;
+    char    startMsg[] = "Welcome to your day of doom!";
+    char    instruct[] = "Press 'S' to start and 'Q' to quit.";
+
+    getmaxyx(stdscr, maxRow, maxCol);
+    for (i = 0; i < maxCol; i++) {
+        mvaddch(0, i, '|');
+        mvaddch(maxRow - 1, i, '|');
+    }
+    for (i = 0; i < maxRow; i++) {
+        mvaddch(i, 0, '-');
+        mvaddch(i, maxCol - 1, '-');
+    }
+    mvprintw(maxRow / 2, (maxCol - strlen(startMsg)) / 2, "%s", startMsg);
+    mvprintw((maxRow / 2) + 1, (maxCol - strlen(instruct)) / 2, "%s", instruct);
+}
+
 int     main()
 {
     int     row = 10, col = 10;
@@ -58,8 +77,7 @@ int     main()
     initscr();
     noecho();
     keypad(stdscr, TRUE);
-
-    printw("Welcome to your day of doom!\n\nPress 'S' to start and 'Q' to quit.\n");
+    printMenu();
     refresh();
     int     ch = getch();
     clear();
