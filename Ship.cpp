@@ -21,7 +21,6 @@ Ship::Ship(void) {
 	_respawnTime = (rand() % _rspeed);
 	set_xPos(x - 1);
 	set_yPos(rand() % (y - 2) + 1);
-	collided();
 }
 
 Ship::Ship(char *c) {

@@ -105,7 +105,7 @@ bool Screen::printMenu() {
 	}
 }
 
-void Screen::screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[], GameEntity explode[]) {
+void Screen::screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[], GameEntity explode[], GameEntity boss[]) {
 	erase();
 	static int flash = 0;
 
@@ -126,6 +126,10 @@ void Screen::screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity pl
 	for (int i = 0; i < 20; i++)
 		if (!s[i].is_collided())
 			mvprintw(s[i].get_yPos(), s[i].get_xPos(), s[i].get_dCh());
+	
+	for (int i = 0; i < 77; i++){
+			mvprintw(boss[i].get_yPos(), boss[i].get_xPos(), boss[i].get_dCh());
+	}
 	for (int i = 0; i < 10; i++) {
 		if (!playerBullets[i].is_collided())
 			mvprintw(playerBullets[i].get_yPos(), playerBullets[i].get_xPos(), playerBullets[i].get_dCh());
