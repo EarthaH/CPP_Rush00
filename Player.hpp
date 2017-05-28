@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Ship.hpp                                         :+:      :+:    :+:   */
+/*   Player.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lchimes <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,21 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SHIP_H
-#define SHIP_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
-#include "GameEntity.hpp"
+#include "Ship.hpp"
 
-class Ship : public GameEntity
+class Player : public Ship
 {
 public:
-	Ship(void);
-	Ship(char *c);
-	Ship(Ship const & obj);
-	Ship & operator=(Ship const & src);
-	~Ship(void);
-	void initBullets(GameEntity bulletArr[]);
-	void shoot(GameEntity bulletArr[]);
+	Player(void);
+	Player(char *c);
+	Player(Player const & obj);
+	Player & operator=(Player const & obj);
+	~Player(void);
+
+	int get_score() const;
+	void set_score(int _score);
+	int get_lives() const;
+	void set_lives(int _lives);
+
+private:
+	int _score;
+	int _lives;
 };
 
 #endif

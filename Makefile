@@ -1,4 +1,4 @@
-FILE = simpleTest.cpp
+FILE = *.cpp
 NAME = ft_retro
 CC = clang++
 CFLAGS = -Wall -Werror -Wextra
