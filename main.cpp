@@ -23,16 +23,17 @@ void sleep(unsigned long int n) {
 	}
 }
 
-void gameLoop() {
+int gameLoop() {
 	Action act;
 	Player *p1 = new Player;
 	Ship e1[20];
-	GameEntity staticStars[50];
-	GameEntity movingStars[50];
+	GameEntity stars[150];
 	GameEntity playerBullets[10];
+	GameEntity explode[4];
+
 	Screen screen;
 	bool stillPlaying = true;
-	int ch;
+	int ch, score;
 
 	timeout(0);
 	p1->initBullets(playerBullets);
@@ -42,24 +43,27 @@ void gameLoop() {
 	while (stillPlaying) {
 		ch = getch();
 		act.setAction(ch);
-		stillPlaying = act.applyAction(p1, e1, movingStars, playerBullets);
-		screen.screenUpdate(p1, e1, movingStars, staticStars, playerBullets);
-		if (p1->is_collided() == 1)
+		stillPlaying = act.applyAction(p1, e1, stars, playerBullets, explode);
+		screen.screenUpdate(p1, e1, stars, playerBullets, explode);
+		if (p1->is_collided())
 			stillPlaying = false;
 		sleep(40000);
 	}
+	score = p1->get_score();
 	delete p1;
+	return (score);
 }
 
 int main(void) {
 	srand(time(0));
 	bool stillPlaying = 1;
+	int score;
 	Screen *screen = new Screen;
 	screen->loadScreen();
 	while (stillPlaying == 1) {
 		stillPlaying = screen->printMenu();
 		if (stillPlaying) {
-			gameLoop();
+			score = gameLoop();
 			stillPlaying = screen->gameOver();
 		}
 	}

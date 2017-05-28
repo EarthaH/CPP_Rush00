@@ -66,6 +66,7 @@ void Action::checkCollision(Player *p1, Ship s1[], GameEntity playerBullets[]) {
 						    || playerBullets[i].get_xPos() == s1[j].get_xPos() - 2) {
 							playerBullets[i].set_collided(true);
 							s1[j].collided();
+							p1->set_score(p1->get_score() + 10);
 						}
 					}
 				}
@@ -76,9 +77,10 @@ void Action::checkCollision(Player *p1, Ship s1[], GameEntity playerBullets[]) {
 	}
 }
 
-bool Action::applyAction(Player *p, Ship s[], GameEntity movingStars[], GameEntity playerBullets[]) {
+bool Action::applyAction(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[],
+                         GameEntity explode[]) {
 	int row, col;
-	static bool onOff = true;
+	static int starcount = 0;
 	getmaxyx(stdscr, row, col);
 	switch (_action) {
 		case KEY_LEFT:
@@ -103,17 +105,64 @@ bool Action::applyAction(Player *p, Ship s[], GameEntity movingStars[], GameEnti
 		default:
 			break;
 	}
-	if (onOff) {
-		for (int i = 0; i < 50; i++) {
-			movingStars[i].set_xPos(movingStars[i].get_xPos() - 1);
-			if (movingStars[i].get_xPos() == 0) {
-				movingStars[i].set_xPos(col - 1);
-				movingStars[i].set_yPos((rand() % (row - 2)) + 1);
+
+	if (p->get_lostlife()) {
+		explode[0].set_dCh((char *)"*.*");
+		explode[1].set_dCh((char *)"*.*.*.*");
+		explode[2].set_dCh((char *)"*.*.*.*");
+		explode[3].set_dCh((char *)"*.*");
+		explode[0].set_xPos(p->get_xPos() + 3);
+		explode[1].set_xPos(p->get_xPos() + 1);
+		explode[2].set_xPos(p->get_xPos() + 1);
+		explode[3].set_xPos(p->get_xPos() + 3);
+		explode[0].set_yPos(p->get_yPos() + 1);
+		explode[1].set_yPos(p->get_yPos());
+		explode[2].set_yPos(p->get_yPos() - 1);
+		explode[3].set_yPos(p->get_yPos() - 2);
+		p->set_lostlife(false);
+	}
+
+	for (int i = 0; i < 4; i++){
+		explode[i].set_xPos(explode[i].get_xPos() - 1);
+	}
+
+	if (starcount % 2 == 0) {
+		for (int i = 0; i < 30; i++) {
+			stars[i].set_xPos(stars[i].get_xPos() - 1);
+			if (stars[i].get_xPos() == 0) {
+				stars[i].set_xPos(col - 1);
+				stars[i].set_yPos((rand() % (row - 2)) + 1);
 			}
 		}
-		onOff = false;
-	} else
-		onOff = true;
+		if (starcount % 4 == 0) {
+			for (int i = 31; i < 60; i++) {
+				stars[i].set_xPos(stars[i].get_xPos() - 1);
+				if (stars[i].get_xPos() == 0) {
+					stars[i].set_xPos(col - 1);
+					stars[i].set_yPos((rand() % (row - 2)) + 1);
+				}
+			}
+			if (starcount % 8 == 0) {
+				for (int i = 61; i < 90; i++) {
+					stars[i].set_xPos(stars[i].get_xPos() - 1);
+					if (stars[i].get_xPos() == 0) {
+						stars[i].set_xPos(col - 1);
+						stars[i].set_yPos((rand() % (row - 2)) + 1);
+					}
+				}
+				if (starcount % 16 == 0) {
+					for (int i = 91; i < 120; i++) {
+						stars[i].set_xPos(stars[i].get_xPos() - 1);
+						if (stars[i].get_xPos() == 0) {
+							stars[i].set_xPos(col - 1);
+							stars[i].set_yPos((rand() % (row - 2)) + 1);
+						}
+					}
+				}
+			}
+		}
+	}
+	starcount++;
 	for (int i = 0; i < 20; i++) {
 		if (!s[i].is_collided())
 			s[i].set_xPos(s[i].get_xPos() - 1);

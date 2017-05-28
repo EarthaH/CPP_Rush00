@@ -16,7 +16,7 @@
 #include <ncurses.h>
 #include <iostream>
 #include "Player.hpp"
-
+extern clock_t G_TIME;
 class Screen {
 
 public:
@@ -32,8 +32,7 @@ public:
 
 	void printScore(int score, int life);
 
-	void screenUpdate(Player *p, Ship s[], GameEntity movingStars[], GameEntity staticStars[],
-	                  GameEntity playerBullets[]);
+	void screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[], GameEntity explode[]);
 
 	void drawBorders();
 
@@ -54,6 +53,7 @@ public:
 private:
 	int _maxX;
 	int _maxY;
+	clock_t _time;
 };
 
 #endif

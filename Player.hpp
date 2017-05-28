@@ -28,10 +28,16 @@ public:
 	void set_score(int _score);
 	int get_lives() const;
 	void set_lives(int _lives);
+	void collided();
 
 private:
 	int _score;
 	int _lives;
+	int _lostlife;
+public:
+	int get_lostlife() const;
+
+	void set_lostlife(int _lostlife);
 };
 
 #endif

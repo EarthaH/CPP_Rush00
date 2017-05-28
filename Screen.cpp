@@ -12,14 +12,15 @@
 
 #include "Screen.hpp"
 
-
 Screen::Screen() {
 	initscr();
 
+	cbreak();
 	getmaxyx(stdscr, _maxY, _maxX);
 	curs_set(0);
 	noecho();
 	keypad(stdscr, TRUE);
+	_time = clock();
 }
 
 Screen::~Screen() {
@@ -43,9 +44,25 @@ void Screen::sleep(unsigned long int n) {
 	}
 }
 
-void Screen::printScore(int score, int life) {
-	int bs;
-	bs = life + score;
+void Screen::printScore(int score, int lives) {
+	static clock_t lastTime = clock();
+	clock_t curTime = clock();
+	static int frames = 0;
+	static int lastFrames = 0;
+
+	frames++;
+	if (lastTime / CLOCKS_PER_SEC != curTime / CLOCKS_PER_SEC)
+	{
+		lastTime = curTime;
+		lastFrames = frames;
+		frames = 0;
+	}
+	mvprintw(2, get_maxX() - 31, "HHHHHHHHHHHHHHHHHHHHHHHHHH");
+	mvprintw(3, get_maxX() - 31, "H	   Lives: %8d   H", lives);
+	mvprintw(4, get_maxX() - 31, "H	   Timer: %8d   H", (( clock() - _time ) / CLOCKS_PER_SEC));
+	mvprintw(5, get_maxX() - 31, "H	   Score: %8d   H", score);
+	mvprintw(6, get_maxX() - 31, "H	   Frame: %8d   H", lastFrames);
+	mvprintw(7, get_maxX() - 31, "HHHHHHHHHHHHHHHHHHHHHHHHHH");
 }
 
 bool Screen::gameOver() {
@@ -88,14 +105,23 @@ bool Screen::printMenu() {
 	}
 }
 
-void Screen::screenUpdate(Player *p, Ship s[], GameEntity movingStars[], GameEntity staticStars[],
-                          GameEntity playerBullets[]) {
+void Screen::screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[], GameEntity explode[]) {
 	erase();
-	for (int i = 0; i < 50; i++) {
-		mvprintw(staticStars[i].get_yPos(), staticStars[i].get_xPos(), staticStars[i].get_dCh());
+	static int flash = 0;
+
+	if (flash % 9 != 0){
+		flash++;
+		for (int i = 0; i < 4; i++)
+		{
+			mvprintw(explode[i].get_yPos(), explode[i].get_xPos(), explode[i].get_dCh());
+		}
 	}
-	for (int i = 0; i < 50; i++)
-		mvprintw(movingStars[i].get_yPos(), movingStars[i].get_xPos(), movingStars[i].get_dCh());
+	else
+		flash++;
+
+	for (int i = 0; i < 150; i++) {
+		mvprintw(stars[i].get_yPos(), stars[i].get_xPos(), stars[i].get_dCh());
+	}
 	mvprintw(p->get_yPos(), p->get_xPos(), p->get_dCh());
 	for (int i = 0; i < 20; i++)
 		if (!s[i].is_collided())
@@ -104,6 +130,7 @@ void Screen::screenUpdate(Player *p, Ship s[], GameEntity movingStars[], GameEnt
 		if (!playerBullets[i].is_collided())
 			mvprintw(playerBullets[i].get_yPos(), playerBullets[i].get_xPos(), playerBullets[i].get_dCh());
 	}
+	printScore(p->get_score(), p->get_lives());
 	drawBorders();
 	refresh();
 }

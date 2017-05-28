@@ -13,21 +13,23 @@
 #include "Player.hpp"
 
 Player::Player(void) {
-	_dCh = (char *)">]]]}>";
+	_dCh = (char *) ">]]]}>";
 	_score = 0;
-	_lives = 0;
+	_lives = 3;
 	_xPos = 10;
 	_yPos = 10;
 	_collided = false;
+	_lostlife = false;
 }
 
 Player::Player(char *c) {
 	_dCh = c;
 	_score = 0;
-	_lives = 0;
+	_lives = 3;
 	_xPos = 10;
 	_yPos = 10;
 	_collided = false;
+	_lostlife = false;
 }
 
 Player::Player(const Player &obj) {
@@ -47,6 +49,15 @@ Player::~Player(void) {
 
 }
 
+void Player::collided() {
+	int y, x;
+	getmaxyx(stdscr, y, x);
+	_lives--;
+	_lostlife = true;
+	if (_lives == 0)
+		set_collided(true);
+}
+
 //____________________GETTERS AND SETTERS______________________
 
 int Player::get_score() const {
@@ -63,4 +74,12 @@ int Player::get_lives() const {
 
 void Player::set_lives(int _lives) {
 	Player::_lives = _lives;
+}
+
+int Player::get_lostlife() const {
+	return _lostlife;
+}
+
+void Player::set_lostlife(int _lostlife) {
+	Player::_lostlife = _lostlife;
 }
