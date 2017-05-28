@@ -32,7 +32,7 @@ public:
 
 	void printScore(int score, int life);
 
-	void screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[], GameEntity explode[]);
+	void screenUpdate(Player *p, Ship s[], GameEntity stars[], GameEntity playerBullets[], GameEntity explode[], GameEntity boss[]);
 
 	void drawBorders();
 
